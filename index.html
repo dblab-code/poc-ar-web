@@ -1,19 +1,5 @@
 <!DOCTYPE html>
-<!--
-Copyright 2019 Google LLC
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    https://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
 <html lang="en">
   <head>
     <title>&lt;model-viewer&gt; codelab</title>
@@ -30,26 +16,12 @@ limitations under the License.
     <!-- 💁 OPTIONAL: Resize Observer polyfill improves resize behavior in non-Chrome browsers -->
     <script src="https://unpkg.com/resize-observer-polyfill@1.5.1/dist/ResizeObserver.js"></script>
 
-    <script src="https://theapicompany.com/deviceAPI.js"></script>
-
     <link rel="stylesheet" href="demo-styles.css" />
   </head>
 
   <body>
-    <model-viewer
-      src="third_party/kap/E530/E530_NT_ANDROID.glb"
-      auto-rotate
-      camera-controls
-      ar
-      background-color="#70BCD1"
-      shadow-intensity="1"
-      alt="A 3D model of a damaged sci-fi helmet"
-      ios-src="third_party/kap/E530/E530_NT_IOS.usdz"
-      quick-look-browsers="safari chrome"
-      max-field-of-view="100deg"
-      min-field-of-view="100deg"
-    >
-    </model-viewer>
+    <!-- o parametro browser_fallback_url redireciona o usuário para a URL especificada caso o dispositivo não consiga exibir a realidade aumentada    -->
+    <!--  Referencia Android: https://developers.google.com/ar/develop/java/scene-viewer    -->
     <a
       id="android_option"
       href="intent://poc-modelviewer.glitch.me/third_party/kap/H552/H552_FR_ANDROID.glb?mode=ar_only&resizable=false#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://poc-modelviewer.glitch.me;end;
@@ -58,41 +30,19 @@ limitations under the License.
     >
     <br />
     <br />
+    <!-- No iOS é necessário uma tag de imagem para ir diretamente para a realidade aumentada ao clicar    -->
+    <!-- Referencia iOS: https://cwervo.com/writing/quicklook-web/+      -->
     <a
       rel="ar"
       id="ios_option"
-      href="https://poc-modelviewer.glitch.me/third_party/kap/E530/E530_NT_IOS.usdz"
+      href="https://poc-modelviewer.glitch.me/third_party/kap/E530/E530_NT_IOS.usdz#allowsContentScaling=0"
     >
-      <!-- <img src="/third_party/kap/E530/E530.jpg" width="100"/> -->
       Realidade Aumentada - iOS
       <img width="100" />
     </a>
 
-    <p id="device"></p>
-
     <script>
-      // var deviceModels = ['ROG Phone', 'ROG Phone II', 'Zenfone 6', 'Zenfone AR', 'Zenfone ARES', 'GM 9 Plus', 'Nexus 5X', 'Nexus 6P', 'Pixel', 'Pixel XL', 'Pixel 2', 'Pixel 2 XL', 'Pixel 3', 'Pixel 3 XL', 'Pixel 3a', 'Pixel 3a XL', 'Pixel 4', 'Pixel 4 XL', 'Huawei	P30', 'Huawei	P30 Pro', 'G6', 'G7 Fit', 'G7 One', 'G7 ThinQ', 'G8 ThinQ', 'G8S ThinQ', 'G8X ThinQ', 'Q6', 'Q70', 'Q8', 'style2', 'Stylo 5', 'V30', 'V30+', 'V30+ JOJO', 'LG Signature Edition 2017', 'V35 ThinQ', 'LG Signature Edition 2018', 'V40 ThinQ', 'V50 ThinQ', 'moto g5s plus', 'moto g6', 'moto g6 plus', 'moto g7', 'moto g7 plus', 'moto g7 power', 'moto g7 play', 'motorola one', 'motorola one action', 'motorola one power', 'motorola one vision', 'motorola one zoom', 'moto x4', 'moto z2 force', 'moto z3', 'moto z3 play', 'moto z4', 'Galaxy A3 (2017)', 'Galaxy A5 (2017)', 'Galaxy A6 (2018)', 'Galaxy A7 (2017)', 'Samsung A7 (2018)', 'Galaxy A8', 'Galaxy A8+ (2018)', 'Galaxy A30', 'Galaxy A40', 'Galaxy A50', 'Galaxy A50s', 'Galaxy A60', 'Galaxy A70', 'Galaxy A80', 'Galaxy J5 (2017)', 'Galaxy J5 Pro', 'Galaxy J7 (2017)', 'Galaxy J7 Pro', 'Galaxy M30s', 'Galaxy Note8', 'Galaxy Note9', 'Galaxy Note10', 'Galaxy Note10+', 'Galaxy S7', 'Galaxy S7 edge', 'Galaxy S8', 'Galaxy S8+', 'Galaxy S9', 'Galaxy S9+', 'Galaxy S10e', 'Galaxy S10', 'Galaxy S10+', 'Galaxy S10 5G', 'Xperia XZ Premium', 'Xperia XZ1', 'Xperia XZ1 Compact', 'Xperia XZ2', 'Xperia XZ2 Compact', 'Xperia XZ2 Premium', 'Xperia XZ3', 'Xperia 1', 'Xperia 5', 'Mi 8', 'Mi 8 SE', 'Mi 9', 'Mi 9 SE', 'Mi A3', 'Mi Mix 2S', 'Mi Mix 3', 'Pocophone F1', 'Redmi K20', 'Redmi K20 Pro', 'Redmi Note 7', 'Redmi Note 7 Pro', 'iPhone 11', 'iPhone 11 Pro', 'iPhone 11 Pro Max', 'iPhone XR', 'iPhone XS', 'iPhone XS Max', 'iPhone X', 'iPhone 8', '	iPhone 7', 'iPhone 6s', 'iPhone SE']
-      var device = deviceAPI.deviceName;
-      console.log("Device: " + device);
-
-      //       function supportArCore(){
-      //         var ret = false;
-
-      //         deviceModels.forEach( element => {
-      //             if (element.toUpperCase().includes(device.toUpperCase())){
-      //               ret = true;
-      //               console.log("Match: " + element + " = " + device);
-      //             }
-      //           }
-      //         )
-
-      //         if('iPhone 6'.toUpperCase().includes(device.toUpperCase())){
-      //           ret = false;
-      //         }
-
-      //         return ret;
-      //       }
-
+      //       Função para verificar o SO do dispositivo e exibir o botão correspondente
       function getMobileOperatingSystem() {
         var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -125,23 +75,6 @@ limitations under the License.
         document.getElementById("android_option").style.visibility = "hidden";
         document.getElementById("ios_option").style.visibility = "hidden";
       }
-
-      // if(supportArCore()){
-      //   document.getElementById("device").innerHTML = device;
-      // }else{
-      //   document.getElementById("device").innerHTML = "Não suporta ArCore";
-      // }
     </script>
-
-    <script
-      type="module"
-      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"
-    ></script>
-
-    <!-- Loads <model-viewer> for old browsers like IE11: -->
-    <script
-      nomodule
-      src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"
-    ></script>
   </body>
 </html>
